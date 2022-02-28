@@ -79,10 +79,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<img src="images/3_pointer_about.png" alt="Logo" width="200" height="100">
+<img src="images/FIFA.png" alt="Logo" width="200" height="100">
 
-Through this project you´ll find multiple analysis about how the NBA´s way of playing the game evolved from a 2 pointer attempting game to a longer range (3 pointer) style of play, this will be shown by correlation coefficients, line charts and pareto charts (main drivers of change).
-
+Through this project you´ll find multiple prediction models. such as multiple linear regression and random forest, in order to find best fit between the independent variables (player statistics through the season) and the dependent variable (Value).
+s
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -109,20 +109,17 @@ These are the python libraries you´ll need to run the ipynb file.
   pip install matplotlib
   pip install pandas
   pip install sklearn 
+  pip install scipy
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Data Sources
 
-The data source of this project where downloaded from [Kaggle](https://www.kaggle.com/nathanlauga/nba-games)
+The data source of this project where downloaded from [Kaggle](https://www.kaggle.com/sanjitva/predicting-soccer-player-transfer-values)
 * These are the csv files used inside the project
 
-  * **games.csv :** all games from 2004 season to last update with the date, teams and some details like number of points, etc.
-  * **games_details.csv :** details of games dataset, all statistics of players for a given game
-  * **players.csv :** players details (name)
-  * **ranking.csv :** ranking of NBA given a day (split into west and east on CONFERENCE column
-  * **teams.csv :** all teams of NBA
+  * **players_stats_value.xlsx :** Top 2500 players based on market value and their 2021-2017 statistics (goals, assists, passes leading to goals, crosses, tackles, etc.)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -134,8 +131,8 @@ The data source of this project where downloaded from [Kaggle](https://www.kaggl
 
 You can use this data to analyze:
 * How a player has performed through time
-* The correlation between individual NBA metrics and general team results (wins)
-* Predict a game result based on the team´s individuals
+* The correlation between individual statistics and player value
+* Predict player´s value based on individual statistics (this is what we´ll focus on)
 * Etc.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -144,7 +141,7 @@ You can use this data to analyze:
 <!-- ROADMAP -->
 ## Roadmap
 
-To do ALL of the following analysis first I did the import via pd.read_csv commands and joined them as I needed to, you can check that inside the [.ipynb file](NBA_analysis.ipynb) with the step by step solution.
+To do ALL of the following analysis first I did the import via pd.read_excel commands and changed the dataframes as I needed to, you can check that inside the [.ipynb file](players_value.ipynb) with the step by step solution.
 
 ### 1. Center position game style change through the years
 
