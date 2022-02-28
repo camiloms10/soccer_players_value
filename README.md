@@ -82,7 +82,6 @@
 <img src="images/FIFA.png" alt="Logo" width="200" height="100">
 
 Through this project you´ll find multiple prediction models. such as multiple linear regression and random forest, in order to find best fit between the independent variables (player statistics through the season) and the dependent variable (Value).
-s
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -143,83 +142,95 @@ You can use this data to analyze:
 
 To do ALL of the following analysis first I did the import via pd.read_excel commands and changed the dataframes as I needed to, you can check that inside the [.ipynb file](players_value.ipynb) with the step by step solution.
 
-### 1. Center position game style change through the years
+**I used the 90% of the dataframes to train the models and the remaining 10% to test the model.**
+
+### 1. Regression and Random Forest (using most correlated 2021/2020 season stats vs. player Value)
 
 <p align ="center">
-<img src="images/Center_3_pt.jpg" width="400" height="198" align="middle">
+
+|                                                | Value               |
+|------------------------------------------------|---------------------|
+| Value                                          | 1.0                 |
+| Goal Creating Actions (20/21)                  | 0.5182500696903144  |
+| Total Carries in Forward Direction (20/21)     | 0.5129803351797286  |
+| Number of Times Player was Pass Target (20/21) | 0.5118986575690919  |
+| Passes Leading to Goals (20/21)                | 0.5096111547070523  |
+| Non-penalty xG+ xA (20/21)                     | 0.5083183735823256  |
+| Passes Leading to Shot Attempt (20/21)         | 0.5031947476181425  |
+| Touches in Attacking Penalty Box (20/21)       | 0.49484671236655164 |
+
+
+
+* I got 7 results >= .49 correlation between them and value
+* We got a .36 score for our linear regression model considering the top 7 variables correlated to Value, as this score is still low we´re going to try other approaches to increase it.
+  
+<p align ="center">
+<img src="images/top7_correlation_model_error_distribution.png" width="400" height="300">
+
+</p>
+* Then I tried using the Random Forest prediticon model using those same indepentent variables we used in the regression model and increased the score from .36... to approximately .38.
+
 </p>
 
-* After 2012 Centers started to take more 3 pointer shots
 
-### 2. Correlation by season  between 3pt% (only Center position) and final team win %
+
+### 2. Standardizing my dataframe using ScikitLearn StandardScaler
 
 <p align ="center">
-<img src="images/FG3M_corr.jpg" width="1400" height="200" align="middle">
+
+|   | Value             | Goal Creating Actions (20/21) | Total Carries in Forward Direction (20/21) | Number of Times Player was Pass Target (20/21) | Passes Leading to Goals (20/21) | Non-penalty xG+ xA (20/21) | Passes Leading to Shot Attempt (20/21) | Touches in Attacking Penalty Box (20/21) |
+|---|-------------------|-------------------------------|--------------------------------------------|------------------------------------------------|---------------------------------|----------------------------|----------------------------------------|------------------------------------------|
+| 0 | 8.83416419601431  | 5.2149035180193435            | 3.0888723567336447                         | 1.5853588482790255                             | 3.2291146602806995              | 4.9325641354366105         | 2.2281528228750886                     | 5.459029630475353                        |
+| 1 | 7.031431813358088 | 2.6141465522461735            | 0.11944508802251795                        | 0.5744640680313485                             | 2.292357521590521               | 5.2136219209315735         | 0.7790340910270162                     | 3.4721126362883212                       |
+| 2 | 6.430521019139348 | 4.564714276576051             | 1.2778480335087268                         | 1.8694281179222683                             | 3.8536194194074853              | 4.955985617561191          | 2.2764567806033575                     | 2.92399760340914                         |
+| 3 | 5.228699430701866 | 3.9145250351327587            | 2.7299305989773544                         | 1.736209425951644                              | 4.478124178534271               | 2.2859366553590377         | 3.0976240619839315                     | 2.193177559570232                        |
+| 4 | 5.228699430701866 | 2.1806870579506454            | 2.3873043756645322                         | 2.6060491205833665                             | 2.292357521590521               | 4.440713010820425          | 3.0976240619839315                     | 6.281202179794125                        |
 </p>
 
-* 2019 has a positive correlation between 3pt% and final win %, the rest of the seasons show no correlation at all.
-* That means we can´t assume that if we have high 3pt% from the centers in a team will impact win% positively.
 
-### 3. 3pt metrics vs 2 pt metrics by season (analyzing trends)
+
+* The regression using the standardized dataframe didn´t have the effect we were looking for, as it gave us the same .36 we had with the initial dataframes.
+
+</p>
 
 <p align ="center">
-<img src="images/FG3M_SEASON.jpg" width="400" height="198" align="middle">
-</p>
+<img src="images/standardized_dataframe_error_distribution.png" width="400" height="300">
 <p align ="center">
-<img src="images/FG3A_SEASON.jpg" width="400" height="198" align="middle">
+We´re limiting this histogram from -100% error to 100% error to appreciate the predictions better in this range, but we got outliers out of this limits.
 </p>
-<p align ="center">
-<img src="images/FG3_PERC_SEASON.jpg" width="400" height="198" align="middle">
 </p>
 
-* 3 pointers attempted have increased almost year by year since the 2012 season (56K to 83K), meanwhile 2 pointers are decreasing slowly since then (175K to 135K). This can also be seen by the per game metrics: 3pt attempts per game (43 to 68) and 2pt attempts per game (122 to 108).
+
+### 3. Using all of 2021-2020 cuantitative statistics
+
+<p align ="center">
+<img src="images/quantitative_stats_model_error.png" width="400" height="300">
+<p align ="center">
+We can see how the distribution is more centralized (between -1,1) vs. the previous prediction models.
+</p>
+</p>
+
+* **We went from having previous predictive scores between .36-.38 to a .59 score** this means our model can predict correctly 59% of the tests we do, that´s a huge improvement using all the cuantitative variables from the 2021/2020 season instead of the most correlated (>.5)
 * 2 pointer shots percentage made has increased from 2013 till 2019 (48% to 52%), meanwhile 3 pointers remain at the 36% range
 
-### 4. 3 point and 2 point FG metrics % of change by NBA Season 
+### 4. Variables significance (p-value)
 <p align ="center">
-<img src="images/FG_PERC_CHANGE_SEASON.jpg" width="400" height="200" align="middle">
+<img src="images/significant_variables_error_distributions.png" width="400" height="300">
+<p align ="center">
+We can see a similar distribution between #3 and #4 as they have a close scores .59 and .56
+</p>
 </p>
 
-* Both 3 pt and 2 pt attempts increased massively from 2011 to 2012 seasons (40% and 26% respectively). That´s because the 2011 season had 300 less games due to the NBA lockout by players, since then the 3 pt attempts mantained a positive % change till the 2018 season, meanwhile the 2 pt attempts decreased each year in the same timeframe.
+* Now I´ll generate a last regression model, this will be based on getting the variables with demonstrated significance in the model (this means that they actually affect 'Value'), all of this calculations will be generated using scipy and the pearson correlation p-value
+* Using only the significant variables in our model we also got a much higher score from our initial 2 models (correlation based), **increased from .36-38 to .56**, this means our model can predict %56 correctly
+* Comparing the predictions vs the real values in our test dataframe,  we can see how we got both positive and negative outliers with -5600% error and +300% error, but we also have some predictions that are close to the real value (tending to 0% error)
 
-### 5. Main drivers (PLAYERS) of 3 pointer attempts increase from 2012 season
-<p align ="center">
-<img src="images/PLAYERS_PARETO.png" width="400" height="200" align="middle">
-</p>
+## Final Conclusions
 
+- While using regression predictive models we should focus on those independent variables that are significantly related to the dependent variable as it gave us a much higher regression score (59%).
+- Generating the standardization of the data didn´t have the effect we were hoping, this means the scales between the columns weren´t that much different, but this tool could help us in other project.
 
-* During the 2012 season the top 5 players with most attempts were:
-  * Stephen Curry - GSW (716.0)
-  * Klay Thompson - GSW (622.0)
-  * Ryan Anderson - NOH (608.0)
-  * Paul George - IND (598.0)
-  * Danny Green - SAS (560.0)
-
-
-### 6. Top 10 players with most 3pt FG Attempts since 2012 till 2019
-
-<p align ="center">
-<img src="images/TOP_PLAYERS_3PT_PER_SEASON.jpg" width="400" height="200" align="middle">
-</p>
-<p align ="center">
-<img src="images/TOP_PLAYERS_3PT_PER_GAME.jpg" width="400" height="200" align="middle">
-</p>
-
-* The top 10 players were:
-  * James Harden (6649.0)
-  * Stephen Curry (6345.0)
-  * Damian Lillard (5460.0)
-  * Klay Thompson (5170.0)
-  * Paul George (4502.0)
-  * Kyle Lowry (4389.0)
-  * Kemba Walker (4196.0)
-  * JJ Redick (3992.0)
-  * Trevor Ariza (3883.0)
-  * Eric Gordon (3840.0)
-
-In these two graphs above we compare the top 10 by FG3A per season and per game.
-
-See the [open issues](https://github.com/camiloms10/NBA_project/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/camiloms10/soccer_players_value/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -257,7 +268,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Camilo Manzur - [@LinkedIn](https://www.linkedin.com/in/camilo-manzur-4b7137a8/)
 
-Project Link: [https://github.com/camiloms10/NBA_project](https://github.com/camiloms10/NBA_project)
+Project Link: [https://github.com/camiloms10/soccer_players_value/](https://github.com/camiloms10/soccer_players_value/NBA_project)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -276,14 +287,14 @@ Project Link: [https://github.com/camiloms10/NBA_project](https://github.com/cam
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/camiloms10/NBA_project.svg?style=for-the-badge
-[contributors-url]: https://github.com/camiloms10/NBA_project/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/camiloms10/NBA_project.svg?style=for-the-badge
-[forks-url]: https://github.com/camiloms10/NBA_project/network/members
-[stars-shield]: https://img.shields.io/github/stars/camiloms10/NBA_project.svg?style=for-the-badge
-[stars-url]: https://github.com/camiloms10/NBA_project/stargazers
-[issues-shield]: https://img.shields.io/github/issues/camiloms10/NBA_project.svg?style=for-the-badge
-[issues-url]: https://github.com/camiloms10/NBA_project/issues
+[contributors-shield]: https://img.shields.io/github/contributors/camiloms10/soccer_players_value.svg?style=for-the-badge
+[contributors-url]: https://github.com/camiloms10/soccer_players_value/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/camiloms10/soccer_players_value.svg?style=for-the-badge
+[forks-url]: https://github.com/camiloms10/soccer_players_value/network/members
+[stars-shield]: https://img.shields.io/github/stars/camiloms10/soccer_players_value.svg?style=for-the-badge
+[stars-url]: https://github.com/camiloms10/soccer_players_value/stargazers
+[issues-shield]: https://img.shields.io/github/issues/camiloms10/soccer_players_value.svg?style=for-the-badge
+[issues-url]: https://github.com/camiloms10/soccer_players_value/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/camilo-manzur-4b7137a8/
 [product-screenshot]: images/screenshot.png
