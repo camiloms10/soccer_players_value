@@ -35,7 +35,7 @@
 <h3 align="center">Soccer Players Value Prediction Model</h3>
 
   <p align="center">
-    This project was made using Python, specifically Pandas and ScikitLearn, to analyze the top Soccer Players market value after the 2021/2020 season, and generating a prediction model to for this value.
+    This project was made using Python, specifically Pandas and ScikitLearn, to analyze the top Soccer Players by market value after the 2021/2020 season, and generating a prediction model for this value based on players individual traits and stats.
     <br />
     <a href="https://github.com/camiloms10/soccer_players_value"><strong>Explore the docs »</strong></a>
     <br />
@@ -222,7 +222,7 @@ We can see how the distribution is more centralized (between -1,1) vs. the previ
 
 * **We went from having previous predictive scores between .36-.38 to a .59 score** this means our model can predict correctly 59% of the tests we do, that´s a huge improvement using all the cuantitative variables from the 2021/2020 season instead of the most correlated (>.5)
 
-### 4. Variables significance (p-value)
+### 4. Variables significance (p-value <.05)
 
 <p align ="center">
 
